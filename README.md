@@ -2,7 +2,7 @@
 Vibe Coding Challenge 2026 - Team Beta
 
 
-# Use Case 2 — Hourly Mieterstrom Energy Management, Allocation & Financial Settlement
+# Use Case 2 — Hourly Mieterstrom Energy Management, Allocation & Financial Settlement ''English version''
 
 **Vibe Coding Challenge | One web application | Three connected MVPs | 24-hour dataset**
 
@@ -190,7 +190,7 @@ This educational scenario deliberately simplifies real regulatory and tax requir
 
 
 
-# Use Case 2 — Stündliches Mieterstrom-Energiemanagement, Energiezuordnung und finanzielle Abrechnung
+# Use Case 2 — Stündliches Mieterstrom-Energiemanagement, Energiezuordnung und finanzielle Abrechnung  ''Deutsche Version''
 
 **Vibe Coding Challenge | Eine Webanwendung | Drei verbundene MVPs | 24-Stunden-Datensatz**
 
