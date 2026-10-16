@@ -7,6 +7,7 @@ import {validate,payload,earliestStart} from './validation.mjs';
 import {createClient} from './lumenaza.mjs';
 import {validateBank} from './bank.mjs';
 import {markThreadRead,parseSocial,upsertMessage} from './src/social.mjs';
+import {aerzen,getWeather} from './weather.mjs';
 
 // Also load .env when the server is started directly with `node server.mjs`.
 // Explicit environment variables always take precedence over the local file.
@@ -67,6 +68,7 @@ const server=http.createServer(async(req,res)=>{
  try{
   const path=cleanPath(req.url);
     if(req.method==='GET'&&path==='/api/status')return send(res,200,{mode:ready?'sandbox':'pending',earliestStart:earliestStart(),messaging:'server'});
+    if(req.method==='GET'&&path==='/api/weather'){const query=new URL(req.url,'http://localhost').searchParams,useAerzen=query.get('fallback')==='aerzen',latitude=useAerzen?aerzen.latitude:query.get('latitude'),longitude=useAerzen?aerzen.longitude:query.get('longitude'),label=useAerzen?aerzen.label:'Ihr Standort';return send(res,200,await getWeather(latitude,longitude,fetch,label));}
     if(req.method==='GET'&&path==='/api/geocode'){const query=new URL(req.url,'http://localhost').searchParams,text=String(query.get('text')||'').trim();if(text.length<3||text.length>200)return send(res,400,{error:'Bitte einen gültigen Suchbegriff angeben.'});return send(res,200,await geoapify(`geocode/search?text=${encodeURIComponent(text)}&limit=5&geometry=original`));}
     if(req.method==='GET'&&path==='/api/nearby-operators'){const query=new URL(req.url,'http://localhost').searchParams,postcode=String(query.get('postcode')||'').replace(/\D/g,'').slice(0,5);if(postcode.length<2)return send(res,400,{error:'Postleitzahl fehlt.'});const found=registrations.filter(x=>String(x.data?.deliv_address_zipcode||'').startsWith(postcode)).map(x=>({reference:x.id,postcode:x.data.deliv_address_zipcode,city:x.data.deliv_address_city,productionType:x.data.production_type}));return send(res,200,{operators:found});}
     if(req.method==='GET'&&path==='/api/operator/lookup'){const postcode=new URL(req.url,'http://localhost').searchParams.get('postcode');const found=operatorMatches(postcode);return send(res,200,{count:found.length,operator:found.length===1?found[0]:null,operators:found});}
