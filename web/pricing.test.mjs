@@ -1,0 +1,12 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {annualCost,consumptionSaving,feedBenefit,workOnlySaving,priceCatalog,comparisonFor,comparisonResults,validPrice} from './src/pricing.mjs';
+test('Jahreskosten enthalten zwölf Grundpreise',()=>assert.equal(annualCost(3000,{work:30,fixed:10}),1020));
+test('Community ohne Grundpreis wird korrekt verglichen',()=>assert.equal(consumptionSaving(3000,{work:30,fixed:10}),240));
+test('Einspeisemehrerlös zieht fixe Gebühren einmal ab',()=>assert.equal(feedBenefit(5000,priceCatalog.referenceFeed,priceCatalog.community,100),50));
+test('negative Ergebnisse bleiben Mehrkosten',()=>assert.ok(consumptionSaving(3000,{work:20,fixed:0})<0));
+test('fehlender Grundpreis verhindert Gesamtvergleich',()=>assert.equal(annualCost(3000,{work:30,fixed:null}),null));
+test('Arbeitspreisvergleich funktioniert ohne Grundpreis',()=>assert.equal(workOnlySaving(3000,{work:30,fixed:null}),120));
+test('zentrale Vergleichswerte sind 30, 26, 5 und 8',()=>assert.deepEqual(comparisonFor('B-FRA-01'),{regionalBuy:30,communityBuy:26,eegReference:5,communityFeed:8,unit:'ct/kWh',status:'Demoannahmen',priceDate:'nicht verifiziert',source:null}));
+test('Beispiel ergibt 140 Euro Bezugsvorteil und 150 Euro Mehrerlös',()=>{const r=comparisonResults(3500,5000,comparisonFor('B-CGN-01'));assert.equal(r.buyDifference,140);assert.equal(r.feedDifference,150)});
+test('negative Differenzen bleiben erhalten',()=>{const r=comparisonResults(1000,1000,{regionalBuy:20,communityBuy:26,eegReference:9,communityFeed:8});assert.equal(r.buyDifference,-60);assert.equal(r.feedDifference,-10)});
+test('ungültige und negative Eingaben werden abgewiesen',()=>{assert.equal(validPrice(-1),false);assert.equal(validPrice('x'),false);assert.equal(comparisonResults(-1,5000,comparisonFor('B-MUL-01')).buyDifference,null)});

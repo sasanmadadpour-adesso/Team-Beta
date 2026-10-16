@@ -1,0 +1,7 @@
+// Server-only OAuth client; endpoints fixed to the isolated test environment.
+const base='https://api.test.lumenaza.de';
+export function createClient({clientId,clientSecret,fetcher=fetch}) {
+ let token,expires=0,pending;
+ async function getToken(){if(token&&Date.now()<expires)return token;if(pending)return pending;pending=(async()=>{const r=await fetcher(base+'/oauth2/token/',{method:'POST',redirect:'error',signal:AbortSignal.timeout(15000),headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'client_credentials',client_id:clientId,client_secret:clientSecret,scope:'write'})});if(!r.ok)throw new Error('AUTH');const data=await r.json();if(typeof data.access_token!=='string'||!Number.isFinite(Number(data.expires_in)))throw new Error('AUTH');token=data.access_token;expires=Date.now()+Math.max(0,Number(data.expires_in)-30)*1000;return token;})();try{return await pending;}finally{pending=null;}}
+ return {async register(body){for(let attempt=0;attempt<2;attempt++){const bearer=await getToken();const r=await fetcher(base+'/v3/producers/',{method:'POST',redirect:'error',signal:AbortSignal.timeout(20000),headers:{Authorization:'Bearer '+bearer,'Content-Type':'application/json'},body:JSON.stringify(body)});if(r.status===401&&attempt===0){token=null;expires=0;continue;}if(r.status!==201){const e=new Error(r.status===400?'REJECTED':'UPSTREAM');e.uncertain=r.status>=500;throw e;}return {created:true};}throw new Error('AUTH');}};
+}

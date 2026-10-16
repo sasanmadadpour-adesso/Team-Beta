@@ -1,0 +1,20 @@
+{
+  "name": "energy-onboarding",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "test": "node --test test.mjs bank.test.mjs",
+    "build": "node build.mjs",
+    "android": "node build.mjs && node sync-android.mjs",
+    "dev": "node build.mjs --watch"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "xlsx": "^0.18.5"
+  }
+}

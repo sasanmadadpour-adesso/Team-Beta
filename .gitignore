@@ -1,0 +1,14 @@
+.env
+**/.env
+node_modules/
+**/node_modules/
+runtime/
+**/runtime/
+*.tar.gz
+*.zip
+android/.gradle/
+android/**/build/
+android/keystore.properties
+android/local.properties
+android/upload-keystore.jks
+web/android/

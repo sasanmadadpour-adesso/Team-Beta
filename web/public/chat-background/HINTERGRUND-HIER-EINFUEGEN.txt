@@ -1,0 +1,14 @@
+CHAT-HINTERGRUND FÜR APP UND WEB
+================================
+
+Lege dein animiertes GIF in genau diesen Ordner und nenne es:
+
+chat-background.gif
+
+Vollständiger lokaler Pfad:
+C:\Users\serta\Desktop\Adesso Projekt\Team-Beta\web\public\chat-background\chat-background.gif
+
+Nach dem nächsten Deployment wird es automatisch in der Android-App und auf
+der Webseite als Chat-Hintergrund verwendet.
+
+Empfehlung: dezentes GIF, möglichst unter 2 MB.
