@@ -12,3 +12,4 @@ android/keystore.properties
 android/local.properties
 android/upload-keystore.jks
 web/android/
+web/.git-local-backup/
